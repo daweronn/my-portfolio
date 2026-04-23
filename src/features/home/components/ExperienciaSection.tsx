@@ -1,30 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-
-interface Experience {
-  role: string;
-  company: string;
-  period: string;
-  description: string;
-}
-
-const experiences: Experience[] = [
-  {
-    role: "Fullstack Developer",
-    company: "Freelance",
-    period: "2023 — Presente",
-    description: "Desenvolvimento de aplicações web completas para clientes de diferentes segmentos, com foco em React, Next.js e Python. Arquitetura de sistemas, design de interfaces e integrações com APIs externas.",
-  },
-  {
-    role: "Frontend Developer",
-    company: "Projeto Pessoal",
-    period: "2022 — 2023",
-    description: "Construção de produtos digitais próprios, explorando design systems, performance e acessibilidade. Aprofundamento em TypeScript e arquitetura de componentes.",
-  },
-];
+import { useExperiences } from "../hooks/useExperiences";
 
 export function ExperienciaSection() {
+  const { experiences } = useExperiences();
+
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 flex flex-col gap-6">
       <motion.h2
@@ -40,7 +21,7 @@ export function ExperienciaSection() {
       <div className="flex flex-col gap-0">
         {experiences.map((exp, i) => (
           <motion.div
-            key={i}
+            key={exp.id}
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

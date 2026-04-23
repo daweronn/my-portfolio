@@ -2,52 +2,19 @@
 
 import { motion } from "motion/react";
 import { Github, Linkedin, Instagram, Mail, ArrowUpRight } from "lucide-react";
+import { useContactLinks } from "../hooks/useContactLinks";
+import type { SocialIconId } from "../types";
 
-interface ContactLink {
-  id: string;
-  label: string;
-  description: string;
-  href: string;
-  icon: React.ReactNode;
-  external: boolean;
-}
-
-const contactLinks: ContactLink[] = [
-  {
-    id: "email",
-    label: "Email",
-    description: "davidvicter@gmail.com",
-    href: "mailto:davidvicter@gmail.com",
-    icon: <Mail size={15} strokeWidth={1.8} />,
-    external: false,
-  },
-  {
-    id: "github",
-    label: "GitHub",
-    description: "@daweronn",
-    href: "https://github.com/daweronn",
-    icon: <Github size={15} strokeWidth={1.8} />,
-    external: true,
-  },
-  {
-    id: "linkedin",
-    label: "LinkedIn",
-    description: "davidvicter",
-    href: "https://www.linkedin.com/in/davidvicter/",
-    icon: <Linkedin size={15} strokeWidth={1.8} />,
-    external: true,
-  },
-  {
-    id: "instagram",
-    label: "Instagram",
-    description: "@davidvicter",
-    href: "https://www.instagram.com/davidvicter/",
-    icon: <Instagram size={15} strokeWidth={1.8} />,
-    external: true,
-  },
-];
+const iconMap: Record<SocialIconId, React.ReactNode> = {
+  github: <Github size={15} strokeWidth={1.8} />,
+  linkedin: <Linkedin size={15} strokeWidth={1.8} />,
+  instagram: <Instagram size={15} strokeWidth={1.8} />,
+  mail: <Mail size={15} strokeWidth={1.8} />,
+};
 
 export function ContatoSection() {
+  const { contactLinks } = useContactLinks();
+
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 pb-24 flex flex-col gap-6">
       <motion.h2
@@ -86,7 +53,7 @@ export function ContatoSection() {
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-ios-sm bg-surface-raised border border-border/60 flex items-center justify-center text-text-muted group-hover:text-accent group-hover:border-accent/30 transition-colors duration-150 shrink-0">
-                {link.icon}
+                {iconMap[link.icon]}
               </div>
               <div className="flex flex-col gap-0.5">
                 <span className="text-sm font-medium text-text-primary leading-none">

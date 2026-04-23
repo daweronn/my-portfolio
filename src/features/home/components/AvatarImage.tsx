@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useThemeContext } from "@/lib/providers/ThemeProvider";
+import { useThemeContext } from "@/app/providers/ThemeProvider";
 
 export function AvatarImage() {
   const { resolvedTheme } = useThemeContext();

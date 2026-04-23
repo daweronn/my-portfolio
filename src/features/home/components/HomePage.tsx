@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { LoadingScreen } from "@/features/loading/components/LoadingScreen";
+import { BackgroundEffects } from "@/components/ui/BackgroundEffects";
 import { ProfileCard } from "./ProfileCard";
 import { SobreSection } from "./SobreSection";
 import { TecnologiasSection } from "./TecnologiasSection";
@@ -31,15 +32,18 @@ export default function HomePage() {
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" as const }}
-            className="min-h-screen bg-background"
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="relative min-h-screen bg-background"
           >
-            <ProfileCard profile={profile} />
-            <SobreSection />
-            <TecnologiasSection />
-            <ExperienciaSection />
-            <ProjetosSection />
-            <ContatoSection />
+            <BackgroundEffects />
+            <div className="relative z-10">
+              <ProfileCard profile={profile} />
+              <SobreSection />
+              <TecnologiasSection />
+              <ExperienciaSection />
+              <ProjetosSection />
+              <ContatoSection />
+            </div>
           </motion.main>
         )}
       </AnimatePresence>

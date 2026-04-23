@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
-import { ThemeProvider } from "@/lib/providers/ThemeProvider";
+import { ThemeProvider } from "@/app/providers/ThemeProvider";
 import { CursorProvider } from "@/components/ui/cursor";
 import { Cursor } from "@/components/ui/cursor";
 import "@/app/globals.css";

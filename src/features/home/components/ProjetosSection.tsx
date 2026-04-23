@@ -1,47 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import type { Transition } from "motion/react";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { AutoHeight } from "@/components/ui/AutoHeight";
+import { ProjectImageGallery } from "./ProjectImageGallery";
+import { ProjectCoverImage } from "./ProjectCoverImage";
+import { useProjects } from "../hooks/useProjects";
+import type { Project, ProjectStatus } from "../types";
 
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  longDescription: string;
-  stack: string[];
-  url?: string;
-  year: string;
-  status: "live" | "wip" | "concept";
-}
-
-const projects: Project[] = [
-  {
-    id: "proj-1",
-    title: "Portfolio Pessoal",
-    description: "Este site. Construído com Next.js, Tailwind e Framer Motion.",
-    longDescription: "Projeto desenvolvido do zero com foco em animações fluidas, arquitetura limpa e design system próprio. Utiliza Tailwind v4, Framer Motion 12 e arquitetura feature-based com separação rígida de responsabilidades.",
-    stack: ["Next.js", "TypeScript", "Tailwind", "Framer Motion"],
-    url: "https://github.com/daweronn",
-    year: "2025",
-    status: "live",
-  },
-  {
-    id: "proj-2",
-    title: "Em breve",
-    description: "Novos projetos chegando em breve.",
-    longDescription: "Estou trabalhando em novos projetos que serão adicionados aqui em breve. Fique de olho no meu GitHub para novidades.",
-    stack: ["Em desenvolvimento"],
-    year: "2025",
-    status: "wip",
-  },
-];
-
-const statusConfig = {
+const statusConfig: Record<ProjectStatus, { label: string; className: string }> = {
   live: { label: "Live", className: "text-emerald-400 bg-emerald-400/8 border-emerald-400/20" },
   wip: { label: "Em progresso", className: "text-amber-400 bg-amber-400/8 border-amber-400/20" },
   concept: { label: "Conceito", className: "text-text-muted bg-surface border-border" },
+};
+
+const springTransition: Transition = {
+  type: "spring",
+  stiffness: 300,
+  damping: 30,
 };
 
 interface ProjectCardProps {
@@ -55,57 +33,124 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 
   return (
     <motion.div
+      layout
+      transition={springTransition}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" as const }}
       className="relative rounded-ios border border-border/60 bg-surface/40 backdrop-blur-ios overflow-hidden"
     >
-      <button
+      <motion.button
+        layout
+        transition={springTransition}
         onClick={() => setExpanded((prev) => !prev)}
-        className="w-full text-left p-5 flex flex-col gap-3"
+        className="w-full text-left p-5 flex flex-row items-center gap-4"
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2.5">
-              <h3 className="text-sm font-semibold text-text-primary tracking-tight">
+        <motion.div
+          layout
+          transition={springTransition}
+          className="flex flex-col gap-3 flex-1 min-w-0"
+        >
+          <motion.div
+            layout
+            transition={springTransition}
+            className="flex flex-col gap-1 min-w-0"
+          >
+            <motion.div
+              layout
+              transition={springTransition}
+              className="flex items-center gap-2.5 flex-wrap"
+            >
+              <motion.h3
+                layout
+                transition={springTransition}
+                className="text-sm font-semibold text-text-primary tracking-tight"
+              >
                 {project.title}
-              </h3>
-              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${status.className}`}>
+              </motion.h3>
+              <motion.span
+                layout
+                transition={springTransition}
+                className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${status.className}`}
+              >
                 {status.label}
-              </span>
-            </div>
-            <p className="text-xs text-text-muted font-mono">{project.year}</p>
-          </div>
+              </motion.span>
+            </motion.div>
+
+            <motion.p
+              layout
+              transition={springTransition}
+              className="text-xs text-text-muted font-mono"
+            >
+              {project.year}
+            </motion.p>
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={expanded ? "expanded-desc" : "collapsed-desc"}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="text-sm text-text-secondary leading-relaxed"
+            >
+              {project.description}
+            </motion.p>
+          </AnimatePresence>
 
           <motion.div
+            layout
+            transition={springTransition}
+            className="flex flex-wrap gap-1.5"
+          >
+            {project.stack.map((tech) => (
+              <motion.span
+                layout
+                transition={springTransition}
+                key={tech}
+                className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-raised border border-border/60 text-text-muted"
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        <div className="relative shrink-0 flex flex-col items-end self-stretch">
+          <motion.div
             animate={{ rotate: expanded ? 180 : 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" as const }}
-            className="shrink-0 mt-0.5 text-text-muted"
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="text-text-muted mb-2"
           >
             <ChevronDown size={14} />
           </motion.div>
-        </div>
 
-        <p className="text-sm text-text-secondary leading-relaxed">{project.description}</p>
-
-        <div className="flex flex-wrap gap-1.5">
-          {project.stack.map((tech) => (
-            <span
-              key={tech}
-              className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-raised border border-border/60 text-text-muted"
-            >
-              {tech}
-            </span>
-          ))}
+          <AnimatePresence>
+            {!expanded && project.slug && (
+              <motion.div
+                key="thumb"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <ProjectCoverImage slug={project.slug} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </button>
+      </motion.button>
 
       <AutoHeight visible={expanded} className="border-t border-border/40">
         <div className="p-5 flex flex-col gap-4">
           <p className="text-sm text-text-secondary leading-relaxed">
             {project.longDescription}
           </p>
+
+          {project.slug && (
+            <ProjectImageGallery slug={project.slug} />
+          )}
 
           {project.url && (
             <motion.a
@@ -116,7 +161,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               transition={{ duration: 0.15 }}
               className="flex items-center gap-1.5 text-xs font-medium text-accent w-fit group/link"
             >
-              Ver no GitHub
+              Ver projeto ao vivo
               <ArrowUpRight
                 size={12}
                 className="transition-transform duration-150 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
@@ -130,13 +175,15 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 }
 
 export function ProjetosSection() {
+  const { projects } = useProjects();
+
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 flex flex-col gap-6">
       <motion.h2
         initial={{ opacity: 0, x: -12 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.4, ease: "easeOut" as const }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className="text-xs font-mono text-text-muted uppercase tracking-widest"
       >
         Projetos
@@ -152,7 +199,7 @@ export function ProjetosSection() {
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" as const }}
+        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
         style={{ originX: 0 }}
         className="h-px bg-border mt-4"
       />

@@ -69,6 +69,7 @@
   [role="button"] {
     cursor: none !important;
   }
+
   :root {
     --background: 220 16% 96%;
     --surface: 0 0% 100%;
@@ -105,6 +106,8 @@
 
   * {
     border-color: hsl(var(--border));
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
   }
 
   html {
@@ -122,6 +125,23 @@
   ::selection {
     background-color: hsl(var(--accent) / 0.2);
     color: hsl(var(--text-primary));
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--text-muted));
   }
 }
 

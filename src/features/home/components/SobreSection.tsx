@@ -1,14 +1,11 @@
 "use client";
 
 import { motion } from "motion/react";
-
-const paragraphs = [
-  "Sou um desenvolvedor fullstack apaixonado por construir produtos que unem simplicidade e robustez. Acredito que a melhor interface é aquela que o usuário nem percebe — ela simplesmente funciona.",
-  "Trabalho principalmente com React, TypeScript e Python, sempre com foco em arquitetura limpa, performance e experiência do usuário. Gosto de projetos que desafiam e que têm impacto real.",
-  "Fora do código, sou movido por design, música e pela ideia de que tecnologia bem feita pode mudar como as pessoas vivem.",
-];
+import { useAbout } from "../hooks/useAbout";
 
 export function SobreSection() {
+  const { paragraphs } = useAbout();
+
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 flex flex-col gap-6">
       <motion.h2
