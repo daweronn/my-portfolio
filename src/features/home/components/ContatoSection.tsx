@@ -2,7 +2,9 @@
 
 import { motion } from "motion/react";
 import { Github, Linkedin, Instagram, Mail, ArrowUpRight } from "lucide-react";
+import { AnimatedText } from "@/components/ui/AnimatedText";
 import { useContactLinks } from "../hooks/useContactLinks";
+import { useLanguageContext } from "@/app/providers/LanguageProvider";
 import type { SocialIconId } from "../types";
 
 const iconMap: Record<SocialIconId, React.ReactNode> = {
@@ -14,6 +16,7 @@ const iconMap: Record<SocialIconId, React.ReactNode> = {
 
 export function ContatoSection() {
   const { contactLinks } = useContactLinks();
+  const { locale } = useLanguageContext();
 
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 pb-24 flex flex-col gap-6">
@@ -24,7 +27,7 @@ export function ContatoSection() {
         transition={{ duration: 0.4, ease: "easeOut" as const }}
         className="text-xs font-mono text-text-muted uppercase tracking-widest"
       >
-        Contato
+        {locale === "pt" ? "Contato" : "Contact"}
       </motion.h2>
 
       <motion.p
@@ -34,7 +37,13 @@ export function ContatoSection() {
         transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" as const }}
         className="text-sm text-text-secondary leading-relaxed"
       >
-        Aberto a conversas sobre projetos, oportunidades ou só trocar uma ideia.
+        <AnimatedText
+          text={
+            locale === "pt"
+              ? "Aberto a conversas sobre projetos, oportunidades ou só trocar uma ideia."
+              : "Open to conversations about projects, opportunities or just a chat."
+          }
+        />
       </motion.p>
 
       <div className="flex flex-col gap-2">

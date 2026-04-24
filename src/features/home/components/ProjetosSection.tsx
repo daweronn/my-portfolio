@@ -5,15 +5,17 @@ import { motion, AnimatePresence } from "motion/react";
 import type { Transition } from "motion/react";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { AutoHeight } from "@/components/ui/AutoHeight";
+import { AnimatedText } from "@/components/ui/AnimatedText";
 import { ProjectImageGallery } from "./ProjectImageGallery";
 import { ProjectCoverImage } from "./ProjectCoverImage";
 import { useProjects } from "../hooks/useProjects";
+import { useLanguageContext } from "@/app/providers/LanguageProvider";
 import type { Project, ProjectStatus } from "../types";
 
-const statusConfig: Record<ProjectStatus, { label: string; className: string }> = {
-  live: { label: "Live", className: "text-emerald-400 bg-emerald-400/8 border-emerald-400/20" },
-  wip: { label: "Em progresso", className: "text-amber-400 bg-amber-400/8 border-amber-400/20" },
-  concept: { label: "Conceito", className: "text-text-muted bg-surface border-border" },
+const statusConfig: Record<ProjectStatus, { label: { pt: string; en: string }; className: string }> = {
+  live: { label: { pt: "Live", en: "Live" }, className: "text-emerald-400 bg-emerald-400/8 border-emerald-400/20" },
+  wip: { label: { pt: "Em progresso", en: "In progress" }, className: "text-amber-400 bg-amber-400/8 border-amber-400/20" },
+  concept: { label: { pt: "Conceito", en: "Concept" }, className: "text-text-muted bg-surface border-border" },
 };
 
 const springTransition: Transition = {
@@ -29,6 +31,7 @@ interface ProjectCardProps {
 
 function ProjectCard({ project, index }: ProjectCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const { locale } = useLanguageContext();
   const status = statusConfig[project.status];
 
   return (
@@ -46,42 +49,22 @@ function ProjectCard({ project, index }: ProjectCardProps) {
         onClick={() => setExpanded((prev) => !prev)}
         className="w-full text-left p-5 flex flex-row items-center gap-4"
       >
-        <motion.div
-          layout
-          transition={springTransition}
-          className="flex flex-col gap-3 flex-1 min-w-0"
-        >
-          <motion.div
-            layout
-            transition={springTransition}
-            className="flex flex-col gap-1 min-w-0"
-          >
-            <motion.div
-              layout
-              transition={springTransition}
-              className="flex items-center gap-2.5 flex-wrap"
-            >
-              <motion.h3
-                layout
-                transition={springTransition}
-                className="text-sm font-semibold text-text-primary tracking-tight"
-              >
-                {project.title}
+        <motion.div layout transition={springTransition} className="flex flex-col gap-3 flex-1 min-w-0">
+          <motion.div layout transition={springTransition} className="flex flex-col gap-1 min-w-0">
+            <motion.div layout transition={springTransition} className="flex items-center gap-2.5 flex-wrap">
+              <motion.h3 layout transition={springTransition} className="text-sm font-semibold text-text-primary tracking-tight">
+                <AnimatedText text={project.title} />
               </motion.h3>
               <motion.span
                 layout
                 transition={springTransition}
                 className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${status.className}`}
               >
-                {status.label}
+                <AnimatedText text={status.label[locale]} />
               </motion.span>
             </motion.div>
 
-            <motion.p
-              layout
-              transition={springTransition}
-              className="text-xs text-text-muted font-mono"
-            >
+            <motion.p layout transition={springTransition} className="text-xs text-text-muted font-mono">
               {project.year}
             </motion.p>
           </motion.div>
@@ -95,15 +78,11 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="text-sm text-text-secondary leading-relaxed"
             >
-              {project.description}
+              <AnimatedText text={project.description} />
             </motion.p>
           </AnimatePresence>
 
-          <motion.div
-            layout
-            transition={springTransition}
-            className="flex flex-wrap gap-1.5"
-          >
+          <motion.div layout transition={springTransition} className="flex flex-wrap gap-1.5">
             {project.stack.map((tech) => (
               <motion.span
                 layout
@@ -145,12 +124,10 @@ function ProjectCard({ project, index }: ProjectCardProps) {
       <AutoHeight visible={expanded} className="border-t border-border/40">
         <div className="p-5 flex flex-col gap-4">
           <p className="text-sm text-text-secondary leading-relaxed">
-            {project.longDescription}
+            <AnimatedText text={project.longDescription} />
           </p>
 
-          {project.slug && (
-            <ProjectImageGallery slug={project.slug} />
-          )}
+          {project.slug && <ProjectImageGallery slug={project.slug} />}
 
           {project.url && (
             <motion.a
@@ -161,7 +138,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               transition={{ duration: 0.15 }}
               className="flex items-center gap-1.5 text-xs font-medium text-accent w-fit group/link"
             >
-              Ver projeto ao vivo
+              {locale === "pt" ? "Ver projeto ao vivo" : "View live project"}
               <ArrowUpRight
                 size={12}
                 className="transition-transform duration-150 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"
@@ -176,6 +153,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 
 export function ProjetosSection() {
   const { projects } = useProjects();
+  const { locale } = useLanguageContext();
 
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 flex flex-col gap-6">
@@ -186,7 +164,7 @@ export function ProjetosSection() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="text-xs font-mono text-text-muted uppercase tracking-widest"
       >
-        Projetos
+        {locale === "pt" ? "Projetos" : "Projects"}
       </motion.h2>
 
       <div className="flex flex-col gap-3">

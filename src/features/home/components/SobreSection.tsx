@@ -1,10 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
+import { AnimatedText } from "@/components/ui/AnimatedText";
 import { useAbout } from "../hooks/useAbout";
+import { useLanguageContext } from "@/app/providers/LanguageProvider";
 
 export function SobreSection() {
   const { paragraphs } = useAbout();
+  const { locale } = useLanguageContext();
 
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 flex flex-col gap-6">
@@ -15,7 +18,7 @@ export function SobreSection() {
         transition={{ duration: 0.4, ease: "easeOut" as const }}
         className="text-xs font-mono text-text-muted uppercase tracking-widest"
       >
-        Sobre
+        {locale === "pt" ? "Sobre" : "About"}
       </motion.h2>
 
       <div className="flex flex-col gap-4">
@@ -28,7 +31,7 @@ export function SobreSection() {
             transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" as const }}
             className="text-sm text-text-secondary leading-relaxed"
           >
-            {text}
+            <AnimatedText text={text} />
           </motion.p>
         ))}
       </div>

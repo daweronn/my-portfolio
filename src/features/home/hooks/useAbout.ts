@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getAboutParagraphs } from "@/services/home.service";
+import { useLanguageContext } from "@/app/providers/LanguageProvider";
 
 interface UseAboutReturn {
   paragraphs: string[];
@@ -9,15 +10,16 @@ interface UseAboutReturn {
 }
 
 export function useAbout(): UseAboutReturn {
+  const { locale } = useLanguageContext();
   const [paragraphs, setParagraphs] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getAboutParagraphs().then((data) => {
+    getAboutParagraphs(locale).then((data) => {
       setParagraphs(data);
       setIsLoading(false);
     });
-  }, []);
+  }, [locale]);
 
   return { paragraphs, isLoading };
 }

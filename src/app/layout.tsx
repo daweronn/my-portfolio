@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/app/providers/ThemeProvider";
-import { CursorProvider } from "@/components/ui/cursor";
+import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { Cursor } from "@/components/ui/cursor";
 import "@/app/globals.css";
 
@@ -40,12 +40,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${sora.variable} ${jetbrainsMono.variable} font-sans cursor-none`}>
+      <body className={`${sora.variable} ${jetbrainsMono.variable} font-sans`}>
         <ThemeProvider>
-          <CursorProvider>
+          <LanguageProvider>
             <Cursor />
             {children}
-          </CursorProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

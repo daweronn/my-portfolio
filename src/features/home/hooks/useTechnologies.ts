@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getTechnologies } from "@/services/home.service";
+import { useLanguageContext } from "@/app/providers/LanguageProvider";
 import type { Technology } from "../types";
 
 interface UseTechnologiesReturn {
@@ -10,15 +11,16 @@ interface UseTechnologiesReturn {
 }
 
 export function useTechnologies(): UseTechnologiesReturn {
+  const { locale } = useLanguageContext();
   const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getTechnologies().then((data) => {
+    getTechnologies(locale).then((data) => {
       setTechnologies(data);
       setIsLoading(false);
     });
-  }, []);
+  }, [locale]);
 
   return { technologies, isLoading };
 }

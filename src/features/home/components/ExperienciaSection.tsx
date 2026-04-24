@@ -1,10 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
+import { AnimatedText } from "@/components/ui/AnimatedText";
 import { useExperiences } from "../hooks/useExperiences";
+import { useLanguageContext } from "@/app/providers/LanguageProvider";
 
 export function ExperienciaSection() {
   const { experiences } = useExperiences();
+  const { locale } = useLanguageContext();
 
   return (
     <section className="w-full max-w-2xl mx-auto px-4 py-12 flex flex-col gap-6">
@@ -15,7 +18,7 @@ export function ExperienciaSection() {
         transition={{ duration: 0.4, ease: "easeOut" as const }}
         className="text-xs font-mono text-text-muted uppercase tracking-widest"
       >
-        Experiência
+        {locale === "pt" ? "Experiência" : "Experience"}
       </motion.h2>
 
       <div className="flex flex-col gap-0">
@@ -50,14 +53,18 @@ export function ExperienciaSection() {
 
             <div className="flex flex-col gap-1.5 pt-0.5 pb-2">
               <div className="flex flex-col gap-0.5">
-                <h3 className="text-sm font-semibold text-text-primary">{exp.role}</h3>
+                <h3 className="text-sm font-semibold text-text-primary">
+                  <AnimatedText text={exp.role} />
+                </h3>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-accent font-mono">{exp.company}</span>
+                  <AnimatedText text={exp.company} className="text-xs text-accent font-mono" />
                   <span className="text-xs text-text-muted">·</span>
-                  <span className="text-xs text-text-muted font-mono">{exp.period}</span>
+                  <AnimatedText text={exp.period} className="text-xs text-text-muted font-mono" />
                 </div>
               </div>
-              <p className="text-sm text-text-secondary leading-relaxed">{exp.description}</p>
+              <p className="text-sm text-text-secondary leading-relaxed">
+                <AnimatedText text={exp.description} />
+              </p>
             </div>
           </motion.div>
         ))}

@@ -4,6 +4,8 @@ import { motion } from "motion/react";
 import { AvatarImage } from "./AvatarImage";
 import { SocialLinks } from "./SocialLinks";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
+import { AnimatedText } from "@/components/ui/AnimatedText";
 import type { ProfileData } from "../types";
 
 interface ProfileCardProps {
@@ -25,7 +27,9 @@ export function ProfileCard({ profile }: ProfileCardProps) {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" as const }}
+          className="flex items-center gap-2"
         >
+          <LanguageToggle />
           <ThemeToggle />
         </motion.div>
       </div>
@@ -39,25 +43,27 @@ export function ProfileCard({ profile }: ProfileCardProps) {
         </motion.div>
 
         <motion.div {...fadeUp(0.15)} className="flex flex-col gap-1">
-          <p className="text-sm text-text-secondary">{profile.role}</p>
-          <p className="text-sm text-text-muted">{profile.location}</p>
+          <AnimatedText text={profile.role} className="text-sm text-text-secondary" />
+          <AnimatedText text={profile.location} className="text-sm text-text-muted" />
         </motion.div>
 
         <motion.blockquote
           {...fadeUp(0.2)}
           className="border-l-2 border-accent/40 pl-3 mt-1"
         >
-          <p className="text-sm text-text-secondary italic leading-relaxed">
-            "{profile.tagline}"
-          </p>
+          <AnimatedText
+            text={`"${profile.tagline}"`}
+            className="text-sm text-text-secondary italic leading-relaxed"
+          />
         </motion.blockquote>
 
-        <motion.p
-          {...fadeUp(0.22)}
-          className="text-sm text-text-secondary leading-relaxed"
-        >
-          {profile.bio}
-        </motion.p>
+        <motion.div {...fadeUp(0.22)}>
+          <AnimatedText
+            text={profile.bio}
+            as="p"
+            className="text-sm text-text-secondary leading-relaxed"
+          />
+        </motion.div>
 
         <motion.div {...fadeUp(0.27)}>
           <SocialLinks socials={profile.socials} />
